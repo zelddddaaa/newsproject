@@ -22,7 +22,7 @@
                     <span>作者:{{item.aut_name}}</span>&nbsp;
                     <span>评论:{{item.comm_count}}</span>&nbsp;
                     <span>时间:{{item.pubdate | relTime}}</span>&nbsp;
-                    <van-icon class="close" name="cross"></van-icon>
+                    <van-icon class="close" name="cross" @click="showMoreActionDia()"></van-icon>
                   </p>
               </template>
             </van-cell>
@@ -30,6 +30,8 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
+    <!-- 弹出框组件 -->
+    <more-action v-model="isShowDiaMore"></more-action>
   </div>
 </template>
 
@@ -40,7 +42,14 @@ import { getChannelsUserOrDefault } from '@/api/channel.js'
 import { mapState } from 'vuex'
 // 导入获取频道文章的请求方法
 import { getArticles } from '@/api/article.js'
+// 导入弹出框组件
+import MoreAction from './components/more-action.vue'
 export default {
+  name: 'HomeIndex',
+  // 注册局部组件
+  components: {
+    MoreAction
+  },
   data () {
     return {
       // 默认激活频道页选择第一个
@@ -54,7 +63,9 @@ export default {
       // 单元格数据
       list: [],
       // 频道信息
-      channels: []
+      channels: [],
+      // 弹出框
+      isShowDiaMore: false
     }
   },
   // 载入加载频道信息
@@ -82,6 +93,10 @@ export default {
     }
   },
   methods: {
+    // 点击传值给子组件打开对话框
+    showMoreActionDia () {
+      this.isShowDiaMore = true
+    },
     // 下拉刷新触发
     onRefresh () {
       setTimeout(() => {
