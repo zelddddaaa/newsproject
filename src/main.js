@@ -5,11 +5,13 @@ import router from './router'
 // 导入store
 import store from './store'
 // 引入Vant
-import Vant from 'vant'
+import Vant, { Lazyload } from 'vant'
 // 导入表单验证组件
 import VeeValidate, {
   Validator
 } from 'vee-validate'
+// 引入lazy-load
+import VueLazyload from 'vue-lazyload'
 // 引入Vant样式
 import 'vant/lib/index.css'
 // 引入设置rem基准值
@@ -22,6 +24,8 @@ Vue.use(Vant)
 Vue.use(VeeValidate)
 // 语言包本地化
 Validator.localize('zh_CN', zh_CN)
+// 注册lazyload
+Vue.use(VueLazyload)
 // 自定义验证规则,规则名phone
 Validator.extend('phone', {
   // 提示消息

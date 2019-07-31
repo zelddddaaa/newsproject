@@ -8,7 +8,17 @@
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
         <van-pull-refresh v-model="item.downPullLoading" @refresh="onRefresh">
           <van-list v-model="item.upPullLoading" :finished="item.upPullFinished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="item in item.articles" :key="item.art_id" :title="item.title" />
+            <van-cell v-for="item in item.articles" :key="item.art_id" :title="item.title">
+              <!-- 使用label插槽自定义单元格内容 自定义标题下方描述显示内容 -->
+              <template slot="label">
+                  <!-- 宫格 -->
+                  <van-grid v-show="item.cover.type!==0" :border="false" :column-num="3">
+                    <van-grid-item v-for="src in item.cover.images" :key="src">
+                      <van-image :src="src" lazy-load></van-image>
+                    </van-grid-item>
+                  </van-grid>
+              </template>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
