@@ -44,6 +44,17 @@ export default {
   created () {
     this.Loadchannels()
   },
+  // 凡是可以使用this.出来的数据,都可以使用watch监测
+  watch: {
+    // 监听state中的user数据
+    user (newV, oldV) {
+      // 重新加载频道
+      this.Loadchannels()
+      // 重新加载当前频道的文章
+      this.activeChannel.upPullLoading = true
+      this.loadArticles()
+    }
+  },
   computed: {
     // 通过计算属性拿到user
     // user(){this.$store.state.user}
@@ -119,6 +130,12 @@ export default {
         // 返回的promise对象,要用await处理,直接返回结果
         data = await this.loadArticles()
         console.log(data)
+      }
+      // pre_timestamp为null 所有数据加载完毕
+      if (!data.pre_timestamp) {
+        this.activeChannel.upPullLoading = false
+        this.activeChannel.upPullFinished = true
+        return
       }
       // 更新最新的时间戳,之后每次请求都有时间戳
       this.activeChannel.timestamp = data.pre_timestamp
