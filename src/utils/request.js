@@ -1,5 +1,8 @@
 // 导入axios
 import axios from 'axios'
+// 导入store
+import store from '@/store.js'
+// console.log(store)
 // 配置axios实例对象
 const request = axios.create({
   // 配置项
@@ -8,6 +11,10 @@ const request = axios.create({
 // 请求拦截器
 request.interceptors.request.use(
   function (config) {
+    // 登录后,配置请求头
+    const { user } = store.state
+    // 排除登录请求,且登陆完成后,且user中存有token信息
+    config.url !== '/app/v1_0/authorizations' && user && (config.headers.Authorization = `Bearer ${user.token}`)
     return config
   },
   function (error) {

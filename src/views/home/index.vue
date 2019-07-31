@@ -4,15 +4,14 @@
     <van-nav-bar title="首页|搜索" fixed />
     <!-- 标签页 -->
     <van-tabs v-model="activeChannelIndex" class="channel-tabs">
-      <van-tab title="第一个">
+      <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
-        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="item in list" :key="item" :title="item" />
+        <van-pull-refresh v-model="item.downPullLoading" @refresh="onRefresh">
+          <van-list v-model="item.upPullLoading" :finished="item.upPullFinished" finished-text="没有更多了" @load="onLoad">
+            <van-cell v-for="item in item.articles" :key="item.art_id" :title="item.title" />
           </van-list>
         </van-pull-refresh>
       </van-tab>
-      <van-tab title="第二个"></van-tab>
     </van-tabs>
   </div>
 </template>
@@ -20,13 +19,17 @@
 <script>
 // 导入获取频道信息的axios请求方法
 import { getChannelsUserOrDefault } from '@/api/channel.js'
+// 导入mapState
+import { mapState } from 'vuex'
+// 导入获取频道文章的请求方法
+import { getArticles } from '@/api/article.js'
 export default {
   data () {
     return {
-      // 默认标签页选择第一个
+      // 默认激活频道页选择第一个
       activeChannelIndex: 0,
       // 下拉刷新
-      isLoading: false,
+      // isLoading: false,
       // loading为false，此时会根据列表滚动位置判断是否触发load事件
       loading: false,
       // 是否已加载完成，加载完成后不再触发load事件
@@ -41,6 +44,15 @@ export default {
   created () {
     this.Loadchannels()
   },
+  computed: {
+    // 通过计算属性拿到user
+    // user(){this.$store.state.user}
+    ...mapState(['user']),
+    // 当前的激活频道依赖activeChannelIndex
+    activeChannel () {
+      return this.channels[this.activeChannelIndex]
+    }
+  },
   methods: {
     // 下拉刷新触发
     onRefresh () {
@@ -51,33 +63,69 @@ export default {
         this.isLoading = false
       }, 500)
     },
-    // 滚动条与底部距离小于 offset 时触发
-    onLoad () {
-      console.log('加载list列表')
-      // 异步更新数据,组件自带
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 500)
-    },
     // 获取频道信息
     async Loadchannels () {
+      // 取出本地存储的数据
+      const isChannels = JSON.parse(window.localStorage.getItem('channels'))
       try {
-        const data = await getChannelsUserOrDefault()
-        console.log(data)
-        // data:{channel:array(7)}
-        this.channels = data.channels
+        // 用户登录或用户未登录&&本地没有存储数据,向后台发送请求
+        if (this.user || (!this.user && !isChannels)) {
+          const data = await getChannelsUserOrDefault()
+          // 遍历channels,给每一项channel添加各自属性
+          console.log(data.channels)
+          data.channels.forEach(item => {
+            item.downPullLoading = false// 下拉刷新
+            item.upPullLoading = false // 当前频道上拉加载更多
+            item.upPullFinished = false // 当前频道加载完毕
+            item.timestamp = Date.now() // 为每个频道添加默认时间戳属性
+            item.articles = [] // 为了控制每个频道自己的文章列表数据
+          })
+          // 把改造完的channels进行赋值
+          this.channels = data.channels
+        }
       } catch (err) {
         console.dir(err)
       }
+    },
+    // 获取当前频道文章列表数据
+    async loadArticles () {
+      // 获取当前频道id 时间戳
+      // 解构赋值重命名
+      const { id: channel_id, timestamp } = this.activeChannel
+      // 发送ajax请求
+      const data = await getArticles({
+        // 当前激活频道id
+        channel_id,
+        // 时间戳
+        timestamp,
+        // 置顶
+        with_top: 1
+      })
+      return data
+    },
+    // 滚动条与底部距离小于 offset 时触发
+    async onLoad () {
+      // 延迟执行 提高用户体验,return的是promise对象 需要await
+      await this.$sleep(800)
+      let data = []
+      // 第一次发送请求
+      data = await this.loadArticles()
+      console.log(data)// {pre_timestamp: 1556789000001, results: Array(0)}
+      // 发过请求,有之前的时间戳,且results为0
+      if (data.pre_timestamp && data.results.length === 0) {
+        // 更新当前频道的时间戳,把第一次拿到的时间戳赋值给第二次请求
+        this.activeChannel.timestamp = data.pre_timestamp
+        // 根据当前的时间戳获取频道文章
+        // 返回的promise对象,要用await处理,直接返回结果
+        data = await this.loadArticles()
+        console.log(data)
+      }
+      // 更新最新的时间戳,之后每次请求都有时间戳
+      this.activeChannel.timestamp = data.pre_timestamp
+      // 更新当前频道的文章数据
+      this.activeChannel.articles.push(...data.results)
+      // 停止加载动画
+      this.activeChannel.upPullLoading = false
     }
   }
 }
@@ -99,8 +147,8 @@ export default {
   position:fixed;
   top: 92px
 }
-//调整内容位置
-/deep/ .van-tabs__content {
-  margin-top: 92px
+//调整内容位置,184px
+.channel-tabs /deep/ .van-tabs__content {
+  margin-top: 184px
 }
 </style>

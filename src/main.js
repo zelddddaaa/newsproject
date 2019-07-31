@@ -26,12 +26,22 @@ Validator.localize('zh_CN', zh_CN)
 Validator.extend('phone', {
   // 提示消息
   getMessage: field => field + '格式不正确',
+  // value是输入的值
   validate: value => {
     return (
       value.length === 11 && /^((13|15|16|18|19)[0-9]{1})\d{8}$/.test(value)
     )
   }
 })
+// 延时器
+Vue.prototype.$sleep = time => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}
+
 Vue.config.productionTip = false
 
 new Vue({
