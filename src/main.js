@@ -54,6 +54,10 @@ Vue.prototype.$sleep = time => {
     }, time)
   })
 }
+// 全局过滤器 日期本地化
+Vue.filter('relTime', value => {
+  return dayjs().locale('zh-cn').from(value)
+})
 
 Vue.config.productionTip = false
 

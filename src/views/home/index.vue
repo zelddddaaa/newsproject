@@ -21,7 +21,7 @@
                   <p>
                     <span>作者:{{item.aut_name}}</span>&nbsp;
                     <span>评论:{{item.comm_count}}</span>&nbsp;
-                    <span>时间:{{item.pubdate}}</span>&nbsp;
+                    <span>时间:{{item.pubdate | relTime}}</span>&nbsp;
                     <van-icon class="close" name="cross"></van-icon>
                   </p>
               </template>
