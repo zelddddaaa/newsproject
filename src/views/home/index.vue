@@ -11,12 +11,19 @@
             <van-cell v-for="item in item.articles" :key="item.art_id" :title="item.title">
               <!-- 使用label插槽自定义单元格内容 自定义标题下方描述显示内容 -->
               <template slot="label">
-                  <!-- 宫格 -->
+                  <!-- 宫格 渲染图片-->
                   <van-grid v-show="item.cover.type!==0" :border="false" :column-num="3">
                     <van-grid-item v-for="src in item.cover.images" :key="src">
                       <van-image :src="src" lazy-load></van-image>
                     </van-grid-item>
                   </van-grid>
+                  <!-- 渲染 作者,评论,时间 -->
+                  <p>
+                    <span>作者:{{item.aut_name}}</span>&nbsp;
+                    <span>评论:{{item.comm_count}}</span>&nbsp;
+                    <span>时间:{{item.pubdate}}</span>&nbsp;
+                    <van-icon class="close" name="cross"></van-icon>
+                  </p>
               </template>
             </van-cell>
           </van-list>

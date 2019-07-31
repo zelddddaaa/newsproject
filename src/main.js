@@ -12,12 +12,21 @@ import VeeValidate, {
 } from 'vee-validate'
 // 引入lazy-load
 import VueLazyload from 'vue-lazyload'
+// 引入dayjs
+import dayjs from 'dayjs'
+// 引入相对时间
+import relativeTime from 'dayjs/plugin/relativeTime'
 // 引入Vant样式
 import 'vant/lib/index.css'
 // 引入设置rem基准值
 import 'amfe-flexible/index.min.js'
 // 导入语言包,为什么报错?
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
+// dayjs本地化
+import 'dayjs/locale/zh-cn'
+dayjs.locale('zh-cn')
+// 注册相对时间
+dayjs.extend(relativeTime)
 // 注册Vant
 Vue.use(Vant)
 // 注册表单验证插件
