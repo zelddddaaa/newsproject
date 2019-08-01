@@ -2,7 +2,7 @@
   <div>
     <!-- 导航,fixed固定在顶部,自有属性 -->
     <van-nav-bar title="首页|搜索" fixed />
-    <!-- 标签页 -->
+    <!-- 标签页 v-model = 当前选中标签 默认值 0-->
     <van-tabs v-model="activeChannelIndex" class="channel-tabs">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
@@ -72,7 +72,7 @@ export default {
   created () {
     this.Loadchannels()
   },
-  // 凡是可以使用this.出来的数据,都可以使用watch监测
+  // 路由优化  凡是可以使用this.出来的数据,都可以使用watch监测
   watch: {
     // 监听state中的user数据
     user (newV, oldV) {
@@ -161,7 +161,7 @@ export default {
         // 根据当前的时间戳获取频道文章
         // 返回的promise对象,要用await处理,直接返回结果
         data = await this.loadArticles()
-        console.log(data)
+        console.log(data)// {pre_timestamp: 1556789000002, results: Array(10)}
       }
       // pre_timestamp为null 所有数据加载完毕
       if (!data.pre_timestamp) {
@@ -173,7 +173,7 @@ export default {
       this.activeChannel.timestamp = data.pre_timestamp
       // 更新当前频道的文章数据
       this.activeChannel.articles.push(...data.results)
-      // 停止加载动画
+      // 停止加载动画,表示加载结束
       this.activeChannel.upPullLoading = false
     }
   }

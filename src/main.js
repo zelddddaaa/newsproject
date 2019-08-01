@@ -5,7 +5,7 @@ import router from './router'
 // 导入store
 import store from './store'
 // 引入Vant
-import Vant, { Lazyload } from 'vant'
+import Vant from 'vant'
 // 导入表单验证组件
 import VeeValidate, {
   Validator
@@ -20,7 +20,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import 'vant/lib/index.css'
 // 引入设置rem基准值
 import 'amfe-flexible/index.min.js'
-// 导入语言包,为什么报错?
+// 导入语言包,为什么报错? 因为不是驼峰
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
 // dayjs本地化
 import 'dayjs/locale/zh-cn'

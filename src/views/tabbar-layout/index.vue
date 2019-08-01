@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 子路由 -->
+    <!-- 子路由 把加载过的页面缓存下来-->
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
