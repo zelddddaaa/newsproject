@@ -29,6 +29,11 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    // 接收传过来的当前文章
+    currentArticle: {
+      type: Object,
+      default: () => {}
     }
   }
 }

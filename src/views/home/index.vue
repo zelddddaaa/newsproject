@@ -8,7 +8,8 @@
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
         <van-pull-refresh v-model="item.downPullLoading" @refresh="onRefresh">
           <van-list v-model="item.upPullLoading" :finished="item.upPullFinished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="item in item.articles" :key="item.art_id" :title="item.title">
+            <!-- JSONBig转换后,art_id不是数字/字符串类型 -->
+            <van-cell v-for="item in item.articles" :key="item.art_id.toString()" :title="item.title">
               <!-- 使用label插槽自定义单元格内容 自定义标题下方描述显示内容 -->
               <template slot="label">
                   <!-- 宫格 渲染图片-->
@@ -22,7 +23,8 @@
                     <span>作者:{{item.aut_name}}</span>&nbsp;
                     <span>评论:{{item.comm_count}}</span>&nbsp;
                     <span>时间:{{item.pubdate | relTime}}</span>&nbsp;
-                    <van-icon class="close" name="cross" @click="showMoreActionDia()"></van-icon>
+                    <!-- 点击显示弹出框,并且出入当前文章信息 -->
+                    <van-icon class="close" name="cross" @click="showMoreActionDia(item)"></van-icon>
                   </p>
               </template>
             </van-cell>
@@ -31,7 +33,7 @@
       </van-tab>
     </van-tabs>
     <!-- 弹出框组件 -->
-    <more-action v-model="isShowDiaMore"></more-action>
+    <more-action v-model="isShowDiaMore" :currentArticle="currentArticle"></more-action>
   </div>
 </template>
 
@@ -65,7 +67,9 @@ export default {
       // 频道信息
       channels: [],
       // 弹出框
-      isShowDiaMore: false
+      isShowDiaMore: false,
+      // 点击弹出框对应的当前文章
+      currentArticle: null
     }
   },
   // 载入加载频道信息
@@ -94,8 +98,10 @@ export default {
   },
   methods: {
     // 点击传值给子组件打开对话框
-    showMoreActionDia () {
+    showMoreActionDia (currentArticle) {
       this.isShowDiaMore = true
+      // 改变data中的当前文章
+      this.currentArticle = currentArticle
     },
     // 下拉刷新触发
     onRefresh () {

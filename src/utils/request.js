@@ -2,12 +2,23 @@
 import axios from 'axios'
 // 导入store
 import store from '@/store.js'
-// console.log(store)
+// 导入JSONBig 记得下载
+import JSONBig from 'json-bigint'
 // 配置axios实例对象
 const request = axios.create({
   // 配置项
   baseURL: 'http://ttapi.research.itcast.cn'
 })
+// 配置JSONBig响应转换
+request.defaults.transformResponse = [
+  function (data) {
+    try {
+      return JSONBig.parse(data)
+    } catch (error) {
+      return data
+    }
+  }
+]
 // 请求拦截器
 request.interceptors.request.use(
   function (config) {
