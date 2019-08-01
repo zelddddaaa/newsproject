@@ -33,7 +33,7 @@
       </van-tab>
     </van-tabs>
     <!-- 弹出框组件 -->
-    <more-action v-model="isShowDiaMore" :currentArticle="currentArticle"></more-action>
+    <more-action v-model="isShowDiaMore" :currentArticle="currentArticle"  @dislike-success="handleDislikeSuccess"></more-action>
   </div>
 </template>
 
@@ -102,6 +102,15 @@ export default {
       this.isShowDiaMore = true
       // 改变data中的当前文章
       this.currentArticle = currentArticle
+    },
+    // 删除当前文章
+    handleDislikeSuccess () {
+      const index = this.activeChannel.articles.findIndex(item => {
+        // 遍历当前频道所有文章,找到当前文章的index
+        return item === this.currentArticle
+      })
+      // splice方法删除对应下标文章
+      this.activeChannel.articles.splice(index, 1)
     },
     // 下拉刷新触发
     onRefresh () {
