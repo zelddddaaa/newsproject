@@ -6,34 +6,57 @@
     <van-tabs v-model="activeChannelIndex" class="channel-tabs">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
-        <van-pull-refresh :success-text="refreshSuccessText" v-model="item.downPullLoading" @refresh="onRefresh">
-          <van-list v-model="item.upPullLoading" :finished="item.upPullFinished" finished-text="没有更多了" @load="onLoad">
+        <van-pull-refresh
+          :success-text="refreshSuccessText"
+          v-model="item.downPullLoading"
+          @refresh="onRefresh"
+        >
+          <van-list
+            v-model="item.upPullLoading"
+            :finished="item.upPullFinished"
+            finished-text="没有更多了"
+            @load="onLoad"
+          >
             <!-- JSONBig转换后,art_id不是数字/字符串类型 -->
-            <van-cell v-for="item in item.articles" :key="item.art_id.toString()" :title="item.title">
+            <van-cell
+              v-for="item in item.articles"
+              :key="item.art_id.toString()"
+              :title="item.title"
+            >
               <!-- 使用label插槽自定义单元格内容 自定义标题下方描述显示内容 -->
               <template slot="label">
-                  <!-- 宫格 渲染图片-->
-                  <van-grid v-show="item.cover.type!==0" :border="false" :column-num="3">
-                    <van-grid-item v-for="src in item.cover.images" :key="src">
-                      <van-image :src="src" lazy-load></van-image>
-                    </van-grid-item>
-                  </van-grid>
-                  <!-- 渲染 作者,评论,时间 -->
-                  <p>
-                    <span>作者:{{item.aut_name}}</span>&nbsp;
-                    <span>评论:{{item.comm_count}}</span>&nbsp;
-                    <span>时间:{{item.pubdate | relTime}}</span>&nbsp;
-                    <!-- 点击显示弹出框,并且出入当前文章信息 -->
-                    <van-icon class="close" name="cross" @click="showMoreActionDia(item)"></van-icon>
-                  </p>
+                <!-- 宫格 渲染图片-->
+                <van-grid v-show="item.cover.type!==0" :border="false" :column-num="3">
+                  <van-grid-item v-for="src in item.cover.images" :key="src">
+                    <van-image :src="src" lazy-load></van-image>
+                  </van-grid-item>
+                </van-grid>
+                <!-- 渲染 作者,评论,时间 -->
+                <p>
+                  <span>作者:{{item.aut_name}}</span>&nbsp;
+                  <span>评论:{{item.comm_count}}</span>&nbsp;
+                  <span>时间:{{item.pubdate | relTime}}</span>&nbsp;
+                  <!-- 点击显示弹出框,并且出入当前文章信息 -->
+                  <van-icon class="close" name="cross" @click="showMoreActionDia(item)"></van-icon>
+                </p>
               </template>
             </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
+      <!-- 自定义插槽 按钮 -->
+      <div slot="nav-right" class="wap-nav" @click="showChannel">
+        <van-icon name="wap-nav"></van-icon>
+      </div>
     </van-tabs>
     <!-- 弹出框组件 :value='isShowDiaMore' @input='isShowDiaMore=value'-->
-    <more-action v-model="isShowDiaMore" :currentArticle="currentArticle"  @dislike-success="handleDislikeSuccess"></more-action>
+    <more-action
+      v-model="isShowDiaMore"
+      :currentArticle="currentArticle"
+      @dislike-success="handleDislikeSuccess"
+    ></more-action>
+    <!-- 频道管理的弹出框组件 -->
+    <channels v-model="isShowPopChannel"></channels>
   </div>
 </template>
 
@@ -46,11 +69,14 @@ import { mapState } from 'vuex'
 import { getArticles } from '@/api/article.js'
 // 导入弹出框组件
 import MoreAction from './components/more-action.vue'
+// 导入channels组件
+import Channels from './components/channels.vue'
 export default {
   name: 'HomeIndex',
   // 注册局部组件
   components: {
-    MoreAction
+    MoreAction,
+    Channels
   },
   data () {
     return {
@@ -71,7 +97,9 @@ export default {
       // 点击弹出框对应的当前文章
       currentArticle: null,
       // 下拉提示
-      refreshSuccessText: ''
+      refreshSuccessText: '',
+      // 弹出频道管理
+      isShowPopChannel: false
     }
   },
   // 载入加载频道信息
@@ -99,6 +127,10 @@ export default {
     }
   },
   methods: {
+    // 显示模态框组件
+    showChannel () {
+      this.isShowPopChannel = true
+    },
     // 点击传值给子组件打开对话框
     showMoreActionDia (currentArticle) {
       this.isShowDiaMore = true
@@ -149,7 +181,7 @@ export default {
           // 遍历channels,给每一项channel添加各自属性
           console.log(data.channels)
           data.channels.forEach(item => {
-            item.downPullLoading = false// 下拉刷新
+            item.downPullLoading = false // 下拉刷新
             item.upPullLoading = false // 当前频道上拉加载更多
             item.upPullFinished = false // 当前频道加载完毕
             item.timestamp = Date.now() // 为每个频道添加默认时间戳属性
@@ -185,7 +217,7 @@ export default {
       let data = []
       // 第一次发送请求
       data = await this.loadArticles()
-      console.log(data)// {pre_timestamp: 1556789000001, results: Array(0)}
+      console.log(data) // {pre_timestamp: 1556789000001, results: Array(0)}
       // 发过请求,有之前的时间戳,且results为0
       if (data.pre_timestamp && data.results.length === 0) {
         // 更新当前频道的时间戳,把第一次拿到的时间戳赋值给第二次请求
@@ -193,7 +225,7 @@ export default {
         // 根据当前的时间戳获取频道文章
         // 返回的promise对象,要用await处理,直接返回结果
         data = await this.loadArticles()
-        console.log(data)// {pre_timestamp: 1556789000002, results: Array(10)}
+        console.log(data) // {pre_timestamp: 1556789000002, results: Array(10)}
       }
       // pre_timestamp为null 所有数据加载完毕
       if (!data.pre_timestamp) {
@@ -220,16 +252,21 @@ export default {
     color: #ffffff;
   }
 }
-.channel-tabs{
-  margin-bottom: 100px
+.channel-tabs {
+  margin-bottom: 100px;
 }
 //把tab栏固定定位,渲染出的组件没有scoped的随机字符属性
-.channel-tabs /deep/ .van-tabs__wrap{
-  position:fixed;
-  top: 92px
+.channel-tabs /deep/ .van-tabs__wrap {
+  position: fixed;
+  top: 92px;
 }
 //调整内容位置,184px
 .channel-tabs /deep/ .van-tabs__content {
-  margin-top: 184px
+  margin-top: 184px;
+}
+//右侧按钮
+.channel-tabs /deep/ .wap-nav {
+  position: fixed;
+  right: 0px;
 }
 </style>
