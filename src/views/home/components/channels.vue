@@ -19,7 +19,8 @@
       </div>
       <!-- 宫格 -->
       <van-grid class="channel-content" :gutter="10" clickable>
-        <van-grid-item v-for="(item,index) in channels" :key="item.id" text="文字">
+          <!-- 点击时传入当前频道的信息 索引 -->
+        <van-grid-item v-for="(item,index) in channels" :key="item.id" text="文字" @click="handleClickChannel(item,index)">
           <span class="text" :class="{active:activeIndex===index}">{{item.name}}</span>
         </van-grid-item>
       </van-grid>
@@ -111,9 +112,8 @@ export default {
         // 发送请求
         const data = await resetUserChannels(channels)
         console.log(data)
-      }
-      // 未登录 本地存储
-      else {
+      } else {
+        // 本地存储
         window.localStorage.setItem('channels', JSON.stringify(this.channels))
       }
     },
@@ -130,6 +130,27 @@ export default {
         item.articles = [] // 为了控制个频道自己的文章列表数据
       })
       this.allChannels = data.channels
+    },
+    // 点击频道 进入 或 删除
+    handleClickChannel (item, index) {
+      // 非编辑下进入频道
+      if (!this.isEdit) {
+        this.channelChannel(item, index)
+      } else {
+        // 完成下删除频道
+        this.deleChannel(item, index)
+      }
+    },
+    // 进入频道
+    channelChannel (item, index) {
+      // 关闭模态框
+      this.$emit('input', false)
+      // 修改父组件 传递当前激活频道
+      this.$emit('update:active-index', index)
+    },
+    // 删除频道
+    deleChannel (item, index) {
+
     }
   }
 }
