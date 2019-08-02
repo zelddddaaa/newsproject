@@ -32,7 +32,7 @@
         </van-pull-refresh>
       </van-tab>
     </van-tabs>
-    <!-- 弹出框组件 -->
+    <!-- 弹出框组件 :value='isShowDiaMore' @input='isShowDiaMore=value'-->
     <more-action v-model="isShowDiaMore" :currentArticle="currentArticle"  @dislike-success="handleDislikeSuccess"></more-action>
   </div>
 </template>

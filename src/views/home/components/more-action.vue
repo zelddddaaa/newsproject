@@ -54,6 +54,7 @@ export default {
         this.$toast('操作成功')
       } catch (err) {
         console.dir(err)
+        this.$toast('操作失败')
       }
     }
   }

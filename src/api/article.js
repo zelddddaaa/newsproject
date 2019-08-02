@@ -24,3 +24,19 @@ export const dislikeArticle = article_Id => {
     }
   })
 }
+// 举报文章
+export const reportArticleByIdAndType = ({
+  article_Id: target,
+  type = 0,
+  remark = ''
+}) => {
+  return request({
+    method: 'post',
+    url: '/app/v1_0/article/reports',
+    data: {
+      target,
+      type,
+      remark: ''
+    }
+  })
+}
