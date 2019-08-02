@@ -47,7 +47,7 @@ export default {
       type: Boolean,
       default: false
     },
-    // 频道信息
+    // 我的频道信息
     channels: {
       type: Array,
       default: () => []
@@ -61,6 +61,19 @@ export default {
   // 加载页面 拿到所有频道数据
   created () {
     this.loadAllChannels()
+  },
+  computed: {
+    // 筛选出推荐频道
+    restChannels () {
+      // 拿到我的频道的全部id
+      const ids = this.channels.map(item => {
+        return item.id
+      })
+      // 筛选出推荐频道 filter返回新数组
+      return this.allChannels.filter(item => {
+        return !ids.includes(item.id)
+      })
+    }
   },
   methods: {
     // 获取所有频道
