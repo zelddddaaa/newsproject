@@ -6,7 +6,7 @@
     <van-tabs v-model="activeChannelIndex" class="channel-tabs">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
-        <van-pull-refresh v-model="item.downPullLoading" @refresh="onRefresh">
+        <van-pull-refresh :success-text="refreshSuccessText" v-model="item.downPullLoading" @refresh="onRefresh">
           <van-list v-model="item.upPullLoading" :finished="item.upPullFinished" finished-text="没有更多了" @load="onLoad">
             <!-- JSONBig转换后,art_id不是数字/字符串类型 -->
             <van-cell v-for="item in item.articles" :key="item.art_id.toString()" :title="item.title">
@@ -69,7 +69,9 @@ export default {
       // 弹出框
       isShowDiaMore: false,
       // 点击弹出框对应的当前文章
-      currentArticle: null
+      currentArticle: null,
+      // 下拉提示
+      refreshSuccessText: ''
     }
   },
   // 载入加载频道信息
@@ -113,13 +115,28 @@ export default {
       this.activeChannel.articles.splice(index, 1)
     },
     // 下拉刷新触发
-    onRefresh () {
-      setTimeout(() => {
-        // 哪儿来的方法?标签组件自带
-        this.$toast('刷新成功')
-        // 刷新成功
-        this.isLoading = false
-      }, 500)
+    async onRefresh () {
+      // 延时器
+      await this.$sleep(800)
+      // 最新时间戳
+      this.activeChannel.timestamp = Date.now()
+      // 按照最新的时间戳 请求数据
+      const data = await this.loadArticles()
+      // 有最新数据
+      if (data.results.length) {
+        // 重置数据 因为拿到的是最新的数据 直接复制 整体替换
+        this.activeChannel.articles = data.results
+        // 把后台返回的时间戳 进行保存 标记本次返回的数据
+        this.activeChannel.timestamp = data.pre_timestamp
+        // 保证数据满屏
+        this.onLoad()
+        // 提示 更新完毕
+        this.refreshSuccessText = '更新完毕'
+      }
+      // 无最细数据
+      this.refreshSuccessText = '更新失败'
+      // 停止动画
+      this.activeChannel.downPullLoading = false
     },
     // 获取频道信息
     async Loadchannels () {
