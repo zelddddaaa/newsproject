@@ -44,6 +44,8 @@
 </template>
 
 <script>
+// 导入vuex中的state的user 判断是否登录
+import { mapState } from 'vuex'
 // 导入请求api组件
 import { getAllChannels } from '@/api/channel.js'
 export default {
@@ -79,6 +81,8 @@ export default {
     this.loadAllChannels()
   },
   computed: {
+    // 注册mapState
+    ...mapState(['user']),
     // 筛选出推荐频道
     restChannels () {
       // 拿到我的频道的全部id
@@ -95,6 +99,14 @@ export default {
     // 点击推荐频道 添加到我的频道
     handleAddClick (item, index) {
       this.channels.push(item)
+      // 用户登录
+      if (this.user) {
+
+      }
+      // 未登录 本地存储
+      else {
+        window.localStorage.setItem('channels', JSON.stringify(this.channels))
+      }
     },
     // 获取所有频道
     async loadAllChannels () {
