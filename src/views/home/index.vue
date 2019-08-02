@@ -56,7 +56,7 @@
       @dislike-success="handleDislikeSuccess"
     ></more-action>
     <!-- 频道管理的弹出框组件 -->
-    <channels v-model="isShowPopChannel"></channels>
+    <channels v-model="isShowPopChannel" :channels="channels" :activeIndex="activeChannelIndex"></channels>
   </div>
 </template>
 
