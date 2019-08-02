@@ -24,6 +24,22 @@
         </van-grid-item>
       </van-grid>
     </div>
+    <!-- 推荐频道 -->
+    <div class="channel">
+      <div class="channel-head">
+        <div>
+          <span class="title">频道推荐</span>
+          <span class="desc">点击添加频道</span>
+        </div>
+      </div>
+      <van-grid class="channel-content" :gutter="10" clickable>
+          <van-grid-item v-for="(item,index) in restChannels" :key="item.id" text="文字" @click="handleAddClick(item,index)">
+              <div class="info">
+                  <span class="text">{{item.name}}</span>
+              </div>
+          </van-grid-item>
+      </van-grid>
+    </div>
   </van-popup>
 </template>
 
@@ -76,6 +92,10 @@ export default {
     }
   },
   methods: {
+    // 点击推荐频道 添加到我的频道
+    handleAddClick (item, index) {
+      this.channels.push(item)
+    },
     // 获取所有频道
     async loadAllChannels () {
       // 拿到所有频道
