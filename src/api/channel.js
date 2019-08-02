@@ -13,3 +13,13 @@ export const getAllChannels = () => {
     url: '/app/v1_0/channels'
   })
 }
+// 更新用户频道
+export const resetUserChannels = channels => {
+  return request({
+    method: 'PUT',
+    url: '/app/v1_0/user/channels',
+    data: {
+      channels
+    }
+  })
+}

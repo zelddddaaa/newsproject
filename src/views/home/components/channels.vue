@@ -47,7 +47,7 @@
 // 导入vuex中的state的user 判断是否登录
 import { mapState } from 'vuex'
 // 导入请求api组件
-import { getAllChannels } from '@/api/channel.js'
+import { getAllChannels, resetUserChannels } from '@/api/channel.js'
 export default {
   name: 'HomeChannel',
   data () {
@@ -97,11 +97,20 @@ export default {
   },
   methods: {
     // 点击推荐频道 添加到我的频道
-    handleAddClick (item, index) {
+    async handleAddClick (item, index) {
       this.channels.push(item)
       // 用户登录
       if (this.user) {
-
+        // 配置 发送到后台的信息 ;频道id从第二项开始
+        const channels = this.channels.splice(1).map((item, index) => {
+          return {
+            id: item.id,
+            seq: index + 2
+          }
+        })
+        // 发送请求
+        const data = await resetUserChannels(channels)
+        console.log(data)
       }
       // 未登录 本地存储
       else {
