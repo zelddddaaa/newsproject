@@ -51,7 +51,7 @@
 // 导入vuex中的state的user 判断是否登录
 import { mapState } from 'vuex'
 // 导入请求api组件
-import { getAllChannels, resetUserChannels } from '@/api/channel.js'
+import { getAllChannels, resetUserChannels, deleUserChannel } from '@/api/channel.js'
 export default {
   name: 'HomeChannel',
   data () {
@@ -140,8 +140,13 @@ export default {
       if (!this.isEdit) {
         this.channelChannel(item, index)
       } else {
-        // 完成下删除频道
-        this.deleChannel(item, index)
+        // 不删首个频道
+        if (index !== 0) {
+          // 完成下删除频道
+          this.deleChannel(item, index)
+        } else {
+          return ''
+        }
       }
     },
     // 进入频道
@@ -152,8 +157,20 @@ export default {
       this.$emit('update:active-index', index)
     },
     // 删除频道
-    deleChannel (item, index) {
-
+    async deleChannel (item, index) {
+      // 先删除频道,改变我的频道数据
+      this.channels.splice(index, 1)
+      // 登录
+      if (this.user) {
+        try {
+          await deleUserChannel(item.id)
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        // 本地删除 把新的channels复制到本地
+        window.localStorage.setItem('channels', JSON.stringify(this.channels))
+      }
     }
   }
 }
