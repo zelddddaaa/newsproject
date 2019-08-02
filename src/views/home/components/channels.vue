@@ -21,7 +21,10 @@
       <van-grid class="channel-content" :gutter="10" clickable>
           <!-- 点击时传入当前频道的信息 索引 -->
         <van-grid-item v-for="(item,index) in channels" :key="item.id" text="文字" @click="handleClickChannel(item,index)">
-          <span class="text" :class="{active:activeIndex===index}">{{item.name}}</span>
+          <!-- 图标为编辑时,才有高亮显示 -->
+          <span class="text" :class="{active:activeIndex===index && !isEdit}">{{item.name}}</span>
+          <!-- 首个频道,不显示x图标 -->
+          <van-icon v-if="isEdit===true && index!==0" class="close-icon" name="close"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>
@@ -102,7 +105,7 @@ export default {
       this.channels.push(item)
       // 用户登录
       if (this.user) {
-        // 配置 发送到后台的信息 ;频道id从第二项开始
+        // 配置 发送到后台的信息 ;频道id从第二项开始 slice(1)从第二项开始
         const channels = this.channels.slice(1).map((item, index) => {
           return {
             id: item.id,
