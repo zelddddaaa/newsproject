@@ -103,7 +103,7 @@ export default {
       // 用户登录
       if (this.user) {
         // 配置 发送到后台的信息 ;频道id从第二项开始
-        const channels = this.channels.splice(1).map((item, index) => {
+        const channels = this.channels.slice(1).map((item, index) => {
           return {
             id: item.id,
             seq: index + 2
