@@ -17,6 +17,18 @@
       </van-cell>
     </van-cell-group>
     <!-- 历史搜索记录 -->
+    <van-cell-group v-else>
+        <van-cell title="历史记录">
+            <van-icon @click="isDeleteData=true" v-show="!isDeleteData" slot="right-icon" name="delete" style="line-height:inherit"></van-icon>
+            <div v-show="isDeleteData">
+                <span style="margin-right:10px">全部删除</span>
+                 <span @click="isDeleteData=false">完成</span>
+            </div>
+        </van-cell>
+        <van-cell>
+
+        </van-cell>
+    </van-cell-group>
   </div>
 </template>
 
@@ -29,10 +41,14 @@ export default {
   name: 'SearchIndex',
   data () {
     return {
+      // 历史记录删除按钮的显示与隐藏
+      isDeleteData: false,
       // 输入框输入内容
       searchText: '',
       // 后端响应内容
-      suggestionData: []
+      suggestionData: [],
+      // 历史记录 本地存储有直接读取 没有为空
+      searchHistories: JSON.parse(window.localStorage.getItem('search-histories')) || []
     }
   },
   // watch监听 searchText 里面执行异步
@@ -62,12 +78,19 @@ export default {
     },
     // 删除事件
     onCancel () {},
-    // 搜索事件
+    // 搜索事件 queryText包含两个来源: 1.搜索框输入内容 2.联想建议
     onSearch (queryText) {
       // 内容为空return出去
       if (!queryText.trim().length) {
         return ''
       }
+      // 把queryText存到历史搜索记录 set去重,既不是数组也不是对象
+      const aaa = new Set(this.searchHistories)
+      //  把queryText存到历史记录中 set转为数组
+      aaa.add(queryText)
+      this.searchHistories = Array.from(aaa)
+      // 历史记录本地存储
+      window.localStorage.setItem('search-histories', JSON.stringify(this.searchHistories))
       //   把关键字或者词条文字传递到搜索结果组件
       this.$router.push({
         name: 'search-result',
