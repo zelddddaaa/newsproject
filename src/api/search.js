@@ -10,3 +10,15 @@ export const getSuggestions = q => {
     }
   })
 }
+// 获取搜索结果 传入的实参解构赋值
+export const getSearchResult = ({ page, per_page, q }) => {
+  return request({
+    method: 'get',
+    url: `/app/v1_0/search`,
+    params: {
+      page,
+      per_page,
+      q
+    }
+  })
+}
