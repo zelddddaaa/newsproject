@@ -10,6 +10,7 @@
     />
     <!-- 联想建议 -->
     <van-cell-group v-if="searchText.length!==0 && suggestionData.length !==0">
+        <!-- 每个联想建议绑定搜索事件 -->
       <van-cell v-for="(item,index) in suggestionData" :key="index" icon="search" @click="onSearch(item)">
           <!-- 把遍历出的联想建议中的搜索框内容 高亮显示 -->
           <div slot="title" v-html="highlightCell(item,searchText)"></div>
@@ -62,7 +63,19 @@ export default {
     // 删除事件
     onCancel () {},
     // 搜索事件
-    onSearch (queryText) {}
+    onSearch (queryText) {
+      // 内容为空return出去
+      if (!queryText.trim().length) {
+        return ''
+      }
+      //   把关键字或者词条文字传递到搜索结果组件
+      this.$router.push({
+        name: 'search-result',
+        params: {
+          q: queryText
+        }
+      })
+    }
   }
 }
 </script>
