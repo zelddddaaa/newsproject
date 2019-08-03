@@ -25,8 +25,8 @@
                  <span @click="isDeleteData=false">完成</span>
             </div>
         </van-cell>
-        <van-cell>
-
+        <van-cell :title="item" v-for="(item,index) in searchHistories" :key="index">
+            <van-icon v-show="isDeleteData" slot="right-icon" name="close" style="line-height:inherit"></van-icon>
         </van-cell>
     </van-cell-group>
   </div>
@@ -45,7 +45,7 @@ export default {
       isDeleteData: false,
       // 输入框输入内容
       searchText: '',
-      // 后端响应内容
+      // 后端响应联想建议内容
       suggestionData: [],
       // 历史记录 本地存储有直接读取 没有为空
       searchHistories: JSON.parse(window.localStorage.getItem('search-histories')) || []
@@ -98,6 +98,8 @@ export default {
           q: queryText
         }
       })
+      // 搜索框内容清空
+      this.searchText = ''
     }
   }
 }
