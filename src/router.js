@@ -18,6 +18,11 @@ export default new Router({
         name: 'home',
         component: () => import('@/views/home')
       }]
+    }, {
+      path: '/search',
+      name: 'search',
+      // 路由懒加载
+      component: () => import('@/views/search')
     }
   ]
 })
