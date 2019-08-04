@@ -160,6 +160,8 @@ export default {
     async deleChannel (item, index) {
       // 先删除频道,改变我的频道数据
       this.channels.splice(index, 1)
+      // 子组件删除成功,通知父组件
+      this.$emit('dele-success')
       // 登录
       if (this.user) {
         try {

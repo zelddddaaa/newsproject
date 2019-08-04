@@ -56,7 +56,7 @@
       @dislike-success="handleDislikeSuccess"
     ></more-action>
     <!-- 频道管理的弹出框组件 -->
-    <channels v-model="isShowPopChannel" :channels="channels" :activeIndex="activeChannelIndex"  @update:active-index="activeChannelIndex=$event"></channels>
+    <channels @dele-success="handleDeleSuccess" v-model="isShowPopChannel" :channels="channels" :activeIndex="activeChannelIndex"  @update:active-index="activeChannelIndex=$event"></channels>
   </div>
 </template>
 
@@ -127,6 +127,13 @@ export default {
     }
   },
   methods: {
+    // 成功删除后,父组件触发的方法
+    handleDeleSuccess () {
+      // 内容为空,调用onload方法: 自动加载,铺满页面
+      if (!this.activeChannel.articles.length) {
+        this.onLoad()
+      }
+    },
     // 显示模态框组件
     showChannel () {
       this.isShowPopChannel = true
