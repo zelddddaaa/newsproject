@@ -31,6 +31,12 @@ export default new Router({
       path: '/search-result',
       name: 'search-result',
       component: () => import('@/views/search/search-result.vue')
+    }, {
+      // 文章详情
+      name: 'article',
+      // 路径传参
+      path: '/article/:article_id',
+      component: () => import('@/views/article')
     }
   ]
 })

@@ -22,6 +22,7 @@
               v-for="item in item.articles"
               :key="item.art_id.toString()"
               :title="item.title"
+               @click="$router.push({name:'article',params:{article_id:141314}})"
             >
               <!-- 使用label插槽自定义单元格内容 自定义标题下方描述显示内容 -->
               <template slot="label">

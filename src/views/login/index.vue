@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       user: {
-        mobile: '18801185985',
+        mobile: '18236269878',
         code: '246810'
       },
       loginLoading: false
