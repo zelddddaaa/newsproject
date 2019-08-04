@@ -76,8 +76,10 @@ export default {
         .split(keywords)// 按照 keywords 字符串转数组: keywords,被逗号替换
         .join(`<span style="color:red>${keywords}</span>`)// 数组转字符串
     },
-    // 删除事件
-    onCancel () {},
+    // 取消事件,跳回之前路由
+    onCancel () {
+      this.$router.back()
+    },
     // 搜索事件 queryText包含两个来源: 1.搜索框输入内容 2.联想建议
     onSearch (queryText) {
       // 内容为空return出去

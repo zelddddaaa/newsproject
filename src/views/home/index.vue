@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 导航,fixed固定在顶部,自有属性 -->
-    <van-nav-bar title="首页|搜索" fixed />
+    <van-nav-bar title="首页|搜索" fixed @click.native="$router.push({name:'search'})"/>
     <!-- 标签页 v-model = 当前选中标签 默认值 0-->
     <van-tabs v-model="activeChannelIndex" class="channel-tabs">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
