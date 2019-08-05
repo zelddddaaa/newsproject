@@ -3,7 +3,11 @@ import request from '@/utils/request.js'
 // channel_id 是 频道ID,
 // timestamp是 时间戳Date.now() 整数 单位毫秒 请求新的推荐数据传当前的时间戳，请求历史推荐传指定的时间戳
 // with_top	是	0或1	是否包含置顶
-export const getArticles = ({ channel_id, timestamp, with_top }) => {
+export const getArticles = ({
+  channel_id,
+  timestamp,
+  with_top
+}) => {
   return request({
     method: 'get',
     url: '/app/v1_1/articles',
@@ -54,7 +58,11 @@ export const getArticleById = (article_id) => {
 // offset	否		获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
 // offset就是之前的页码 或者是时间戳
 // 形参设置默认值
-export const getCommentsOrReply = ({ isCommet = true, source, offset = null }) => {
+export const getCommentsOrReply = ({
+  isCommet = true,
+  source,
+  offset = null
+}) => {
   return request({
     method: 'GET',
     url: `/app/v1_0/comments`,
@@ -62,6 +70,26 @@ export const getCommentsOrReply = ({ isCommet = true, source, offset = null }) =
       type: isCommet ? 'a' : 'c',
       source,
       offset
+    }
+  })
+}
+// 添加评论 || 添加回复
+// target 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+// content 评论内容
+// art_id	对评论内容发表回复时，需要传递此参数 对文章进行评论，不要传此参数
+export const addCommentOrReply = ({
+  target,
+  content = '',
+  art_id = null
+}) => {
+  return request({
+    method: 'POST',
+    url: `/app/v1_0/comments`,
+    data: {
+      target,
+      content,
+      art_id
+
     }
   })
 }
