@@ -3,46 +3,51 @@
         <van-cell>
             <!-- 自定义左侧图标 -->
             <div slot="icon">
-                <img :src="commetTop.aut_photo" alt="" class="avatar">
+                <img :src="commentTop.aut_photo" alt="" class="avatar">
             </div>
             <div slot="title">
-                <span>{{commetTop.aut_name}}</span>
+                <span>{{commentTop.aut_name}}</span>
                 <van-tag>楼主</van-tag>
             </div>
             <div slot="default">
                 <van-button  icon="like-o" size="mini" plain>赞</van-button>
             </div>
             <div slot="label">
-                <p>{{commetTop.content}}</p>
+                <p>{{commentTop.content}}</p>
                 <p>
-                    <span>{{commetTop.pubdate | relTime}}</span>
+                    <span>{{commentTop.pubdate | relTime}}</span>
                 </p>
             </div>
         </van-cell>
         <hr>
-        <!-- 对于楼主评论的回复 -->
-
+        <!-- 对于楼主评论的回复 父传子 显示为对于当前评论的回复-->
+         <comment-list :source="commentTop.com_id.toString()" :isCommet="false"></comment-list>
     </van-popup>
 </template>
 
 <script>
+// 导入评论组件
+import CommentList from './comment-list.vue'
 // 导入事件总线 接收评论组件传递的当前评论
 import vm from '@/utils/global-bus.js'
 export default {
+  components: {
+    CommentList
+  },
   data () {
     return {
       // 弹出框显示
       isShow: false,
       // 评论回复
-      commetTop: {}
+      commentTop: {}
     }
   },
   // 在另一个组件调用方法时->此方法的声明的要准备好->created钩子函数的使用场景: 为数据做准备工作||获取首屏数据
   created () {
     // 此时评论组件点击回复 => 回复组件弹出
-    vm.$on('reply-show', commetTop => {
+    vm.$on('reply-show', commentTop => {
       // 接收评论组件传递的当前评论
-      this.commetTop = commetTop
+      this.commentTop = commentTop
       // 显示弹出层
       this.isShow = true
     })
