@@ -3,7 +3,7 @@
     <!-- 导航,fixed固定在顶部,自有属性 -->
     <van-nav-bar title="首页|搜索" fixed @click.native="$router.push({name:'search'})"/>
     <!-- 标签页 v-model = 当前选中标签 默认值 0-->
-    <van-tabs v-model="activeChannelIndex" class="channel-tabs">
+    <van-tabs v-model="activeChannelIndex" class="channel-tabs" :lazy-render="false" @change="handleChangeTab">
       <van-tab :title="item.name" v-for="item in channels" :key="item.id">
         <!-- 下拉刷新,refresh下拉刷新时触发 -->
         <van-pull-refresh
@@ -128,6 +128,11 @@ export default {
     }
   },
   methods: {
+    // 完善删除
+    handleChangeTab () {
+      // 手动调用onload方法 加载文章
+      this.onLoad()
+    },
     // 成功删除后,父组件触发的方法
     handleDeleSuccess () {
       // 内容为空,调用onload方法: 自动加载,铺满页面

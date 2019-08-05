@@ -66,6 +66,22 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less" scoped>
+.auth-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26px;
+  .base-info {
+    display: flex;
+    align-items: center;
+  }
+  .avatar {
+    margin-right: 10px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+  }
+}
 
 </style>

@@ -47,3 +47,20 @@ export const getArticleById = (article_id) => {
     url: `/app/v1_0/articles/${article_id}`
   })
 }
+
+// 获取文章评论或评论回复
+// type	是	a或c	评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+// source	是		源id，文章id或评论id
+// offset	否		获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
+// offset就是之前的页码 或者是时间戳
+export const getCommentsOrReply = ({ isCommet, commetOrReplyId, offset }) => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/comments`,
+    params: {
+      type: isCommet ? 'a' : 'c',
+      source: commetOrReplyId,
+      offset
+    }
+  })
+}

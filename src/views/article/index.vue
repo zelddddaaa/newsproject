@@ -11,14 +11,18 @@
              <div class="article-content" v-html="article.content"></div>
         </div>
         <!-- 更多操作组件 -->
-
+        <more-action></more-action>
         <!-- 评论列表组件 -->
-
+        <comment-list></comment-list>
         <!-- 回复列表组件 -->
     </div>
 </template>
 
 <script>
+// 导入更多操作
+import MoreAction from './components/more-action.vue'
+// 导入文章评论组件
+import CommentList from './components/comment-list.vue'
 // 导入作者信息组件 帕斯卡命名法
 import AuthInfo from './components/auth-info.vue'
 // 导入获取文章详情的请求
