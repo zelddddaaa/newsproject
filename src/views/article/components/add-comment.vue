@@ -10,15 +10,34 @@
 </template>
 
 <script>
+// 导入发布评论请求
+import { addCommentOrReply } from '@/api/article.js'
 export default {
+  name: 'AddComment',
   data () {
     return {
       content: ''
     }
   },
+  // 接收组件使用者传值
+  props: {
+    art_id: {
+      type: [Number, String]
+    },
+    target: {
+      type: [Number, String],
+      required: true
+    }
+  },
   methods: {
-    handleAdd () {
-
+    async handleAdd () {
+      // target 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+      /// / art_id	对评论内容发表回复时，需要传递此参数 对文章进行评论，不要传此参数
+      const data = await addCommentOrReply({
+        content: this.content,
+        target: this.target,
+        art_id: this.art_id
+      })
     }
   }
 

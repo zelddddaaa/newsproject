@@ -38,8 +38,10 @@ export default {
     return {
       // 弹出框显示
       isShow: false,
-      // 评论回复
-      commentTop: {}
+      // 评论回复 传默认值 解决渲染comment-list组件 还没有拿到数据报错undefined
+      commentTop: {
+        com_id: ''
+      }
     }
   },
   // 在另一个组件调用方法时->此方法的声明的要准备好->created钩子函数的使用场景: 为数据做准备工作||获取首屏数据
