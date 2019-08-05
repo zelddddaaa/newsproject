@@ -53,13 +53,14 @@ export const getArticleById = (article_id) => {
 // source	是		源id，文章id或评论id
 // offset	否		获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
 // offset就是之前的页码 或者是时间戳
-export const getCommentsOrReply = ({ isCommet, commetOrReplyId, offset }) => {
+// 形参设置默认值
+export const getCommentsOrReply = ({ isCommet = true, source, offset = null }) => {
   return request({
     method: 'GET',
     url: `/app/v1_0/comments`,
     params: {
       type: isCommet ? 'a' : 'c',
-      source: commetOrReplyId,
+      source,
       offset
     }
   })

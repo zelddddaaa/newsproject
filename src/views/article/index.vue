@@ -30,7 +30,9 @@ import { getArticleById } from '@/api/article.js'
 export default {
   // 组件注册
   components: {
-    AuthInfo
+    AuthInfo,
+    MoreAction,
+    CommentList
   },
   data () {
     return {
