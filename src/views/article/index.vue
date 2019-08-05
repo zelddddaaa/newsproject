@@ -14,11 +14,18 @@
         <more-action></more-action>
         <!-- 评论列表组件 不传isComment,因为形参默认值就为true-->
         <comment-list :source="article_id"></comment-list>
+        <!-- 发布评论组件 对于文章的评论 不传art_id-->
+        <add-comment class="add-comment" :target="article_id"></add-comment>
         <!-- 回复列表组件 -->
+        <reply-list :article_id="article_id"></reply-list>
     </div>
 </template>
 
 <script>
+// 导入回复列表
+import ReplyList from './components/reply-list.vue'
+// 导入发布评论组件
+import AddComment from './components/add-comment.vue'
 // 导入更多操作
 import MoreAction from './components/more-action.vue'
 // 导入文章评论组件
@@ -32,7 +39,9 @@ export default {
   components: {
     AuthInfo,
     MoreAction,
-    CommentList
+    CommentList,
+    AddComment,
+    ReplyList
   },
   data () {
     return {
@@ -71,6 +80,12 @@ export default {
   .article-content {
     font-size: 20px;
   }
+}
+//发布评论
+.add-comment {
+  position: fixed;
+  left: 0;
+  bottom: 0;
 }
 
 </style>
