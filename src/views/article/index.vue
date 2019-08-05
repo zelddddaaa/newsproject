@@ -12,8 +12,8 @@
         </div>
         <!-- 更多操作组件 -->
         <more-action></more-action>
-        <!-- 评论列表组件 -->
-        <comment-list></comment-list>
+        <!-- 评论列表组件 不传isComment,因为形参默认值就为true-->
+        <comment-list :source="article_id"></comment-list>
         <!-- 回复列表组件 -->
     </div>
 </template>

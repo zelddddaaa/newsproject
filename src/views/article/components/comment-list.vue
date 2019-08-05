@@ -47,6 +47,16 @@ export default {
       commets: []
     }
   },
+  // 接收组件调用者传值
+  props: {
+    source: {
+      tyep: [Number, String],
+      required: true
+    },
+    isCommet: {
+      type: Boolean
+    }
+  },
   // 计算属性接收跳转过来携带的文章id
   computed: {
     article_id () {
@@ -63,10 +73,11 @@ export default {
       this.$sleep(800)
       // 获取文章评论
       const data = await getCommentsOrReply({
-        commetOrReplyId: this.article_id,
+        // 实参为组件调用者传入
+        source: this.source,
         offset: this.offset,
         // 获取文章评论
-        isCommet: true
+        isCommet: this.isCommet
       })
       // 无数据
       if (!data.results.length) {
