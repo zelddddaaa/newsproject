@@ -40,3 +40,10 @@ export const reportArticleByIdAndType = ({
     }
   })
 }
+// 文章详情
+export const getArticleById = (article_id) => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/articles/${article_id}`
+  })
+}
