@@ -27,8 +27,8 @@
 </template>
 
 <script>
-// 导入获取用户资料的请求api
-import { getCurrentProfileInfo } from '@/api/user.js'
+// 导入获取用户资料和编辑用户资料的请求api
+import { getCurrentProfileInfo, patchCurrentProfileInfo } from '@/api/user.js'
 // 导入上传组件
 import UploadPhoto from './components/upload-photo.vue'
 export default {
@@ -48,8 +48,12 @@ export default {
     this.loadProfileInfo()
   },
   methods: {
-    // 提交编辑
-    handleSave () {},
+    // 点击保存 提交编辑
+    async handleSave () {
+      await patchCurrentProfileInfo({
+        name: '原神biss'
+      })
+    },
     // 获取用户资料
     async loadProfileInfo () {
       const data = await getCurrentProfileInfo()
