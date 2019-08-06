@@ -41,6 +41,11 @@ export default new Router({
       // 路径传参
       path: '/article/:article_id',
       component: () => import('@/views/article')
+    }, {
+      // 编辑用户信息
+      name: 'user-profile',
+      path: '/user-profile',
+      component: () => import(`@/views/user-profile`)
     }
   ]
 })
