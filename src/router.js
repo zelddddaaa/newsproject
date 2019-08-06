@@ -9,7 +9,7 @@ export default new Router({
       // 登录
       path: '/login',
       name: 'login',
-      // 路由懒加载
+      // 路由懒加载 自动加载index开头的文件
       component: () => import('@/views/login')
     }, {
       // 主页
@@ -19,6 +19,10 @@ export default new Router({
         path: '/',
         name: 'home',
         component: () => import('@/views/home')
+      }, {
+        path: '/mine',
+        name: 'mine',
+        component: () => import('@/views/mine')
       }]
     }, {
       // 搜索

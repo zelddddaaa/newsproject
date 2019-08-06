@@ -47,6 +47,10 @@ export default {
       commets: []
     }
   },
+  // 手动调用onload方法
+  created () {
+    this.onload()
+  },
   // 接收组件调用者传值
   props: {
     source: {
