@@ -29,3 +29,10 @@ export const followUser = user_id => {
     }
   })
 }
+// 获取用户个人信息
+export const getCurrentUserInfo = () => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/user`
+  })
+}
