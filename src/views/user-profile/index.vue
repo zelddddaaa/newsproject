@@ -9,7 +9,7 @@
       @click-right="handleSave"
     ></van-nav-bar>
     <van-cell-group>
-      <van-cell is-link title="头像">
+      <van-cell is-link title="头像"  @click="isUploadPhotoShow=true">
         <div slot="default">
           <img :src="user.photo" alt width="30" />
         </div>
@@ -21,19 +21,27 @@
       <van-cell is-link title="性别" :value="user.gender===0 ? '男' : '女'"></van-cell>
       <van-cell is-link title="生日" :value="user.birthday"></van-cell>
     </van-cell-group>
-    <!-- 头像上传 -->
-
+    <!-- 头像上传  使用组件-->
+    <upload-photo v-model='isUploadPhotoShow'></upload-photo>
   </div>
 </template>
 
 <script>
 // 导入获取用户资料的请求api
 import { getCurrentProfileInfo } from '@/api/user.js'
+// 导入上传组件
+import UploadPhoto from './components/upload-photo.vue'
 export default {
+  // 注册组件
+  components: {
+    UploadPhoto
+  },
   data () {
     return {
       // 用户资料
-      user: {}
+      user: {},
+      // 显示上传组件
+      isUploadPhotoShow: false
     }
   },
   created () {
